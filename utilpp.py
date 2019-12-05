@@ -4,7 +4,7 @@
 
 import sys,os,math 
 from ROOT import gROOT,gStyle,TH1D,TH1F,gPad,TPad,TCanvas,TLine,TPostScript,TLatex 
-from ROOT import TFile,TGraphErrors, TGraph, TGraphAsymmErrors
+from ROOT import Math,TFile,TGraphErrors, TGraph, TGraphAsymmErrors
 
 def showme(data,theory,ratio,Xmin=0.01,Xmax=1000,Ymin=0.001,Ymax=5000,BMin=-1.99, BMax=1.99, titX="X",titY="Y",titR="Ratio"):
   """A function to draw and and theory as well as their ratio. S.Chekanov

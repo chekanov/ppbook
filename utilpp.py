@@ -1,5 +1,6 @@
 # pyROOT utility classes used for "Data Analysis Techniques in Particle Physics"
 # https://handwiki.org/wiki/Physics:PP/Start
+# This code is protected by CC BY-ND License: https://creativecommons.org/licenses/by-nd/4.0/ 
 # S.Chekanov (ANL)
 
 import sys,os,math 

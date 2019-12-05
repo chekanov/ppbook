@@ -115,4 +115,18 @@ def showme(data,theory,ratio,Xmin=0.01,Xmax=1000,Ymin=0.001,Ymax=5000,BMin=-1.99
 
   if (inp != "-b"):
    if (raw_input("Press any key to exit") != "-9999"):
-     c1.Close(); sys.exit(1);
+     c1.Close(); sys.exit(1)
+
+
+
+def GetZVal(p, excess) :
+  '''The function normal_quantile converts a p-value into a significance,
+     i.e. the number of standard deviations corresponding to the right-tail of 
+     Gaussian
+  ''' 
+  if excess:
+    zval = Math.normal_quantile(1-p,1);
+  else :
+    zval = Math.normal_quantile(p,1);
+  return zval
+

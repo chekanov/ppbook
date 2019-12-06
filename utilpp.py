@@ -7,28 +7,28 @@ import sys,os,math
 from ROOT import gROOT,gStyle,TH1D,TH1F,gPad,TPad,TCanvas,TLine,TPostScript,TLatex 
 from ROOT import Math,TFile,TGraphErrors, TGraph, TGraphAsymmErrors
 
-def showme(data,theory,ratio,Xmin=0.01,Xmax=1000,Ymin=0.001,Ymax=5000,BMin=-1.99, BMax=1.99, titX="X",titY="Y",titR="Ratio"):
+def showme(figure,data,theory,ratio,X,Y,YB):
   """A function to draw and and theory as well as their ratio. S.Chekanov
+   @param  figure Figure file
    @param: data   Histogram with data 
    @param: theory Histogram with theory
-   @param: ratio  TGraph with for buttom plot
-   @param: Xmin, Xmax - Min and Max values of X-axis
-   @param: Ymin, Ymax - Min and Max values of Y-axis
-   @param: Bmin, Bmax - Min and Max values of Y-axis of bottom plot
-   @param titX, titY, titR - labels
+   @param: ratio  TGraph or Histogram with for bottom plot
+   @param: X      X-axis attributes (Min,Max,Name,IsLog) 
+   @param: Y      Y-axis attributes (Min,Max,Name,IsLog)  
+   @param: YB     Bottom (lower) panel attributes (Min,Max,Name,IsLog)  
    @author S.Chekanov (ANL)
   """
+
+  if (X[0]>X[1]): print("X min larger than X max"); return;
+  if (Y[0]>Y[1]): print("X min larger than X mas"); return;
+  if (YB[0]>YB[1]): print ("X min larger than X mas"); return;
 
   inp="plot"
   if (len(sys.argv) ==2):
      inp = sys.argv[1]
   print "Mode=",inp
 
-  # prepare the canvas
-  epsfig="utilpp.eps"
-
   c1=TCanvas("cv","",600,500);
-  ps1 = TPostScript( epsfig,113)
   c1.Divide();
   c1.SetTickx()
   c1.SetTicky()
@@ -52,12 +52,14 @@ def showme(data,theory,ratio,Xmin=0.01,Xmax=1000,Ymin=0.001,Ymax=5000,BMin=-1.99
   cv2.SetBottomMargin(0.35);
   cv2.Draw();
 
-  cv1.cd().SetLogy();
+  if (Y[3]==1): cv1.cd().SetLogy();
+  if (X[3]==1): cv1.cd().SetLogx();
+  if (YB[3]==1): cv2.cd().SetLogy();
 
-  h1=gPad.DrawFrame(Xmin,Ymin,Xmax,Ymax);
+  h1=gPad.DrawFrame(X[0],Y[0],X[1],Y[1]);
   h1.Draw()
   ay=h1.GetYaxis(); ay.SetTitleOffset(1.1)
-  ay.SetTitle( titY );
+  ay.SetTitle( Y[2] );
 
   data.Draw("same pe")
   theory.Draw("histo same")
@@ -65,10 +67,10 @@ def showme(data,theory,ratio,Xmin=0.01,Xmax=1000,Ymin=0.001,Ymax=5000,BMin=-1.99
   #########################################
   #cv2.cd().SetGridy();
   cv2.cd().SetGridx();
-  h2=gPad.DrawFrame(Xmin,BMin,Xmax,BMax);
+  h2=gPad.DrawFrame(X[0],YB[0],X[1],YB[1]);
   h2.Draw()
   ax=h2.GetXaxis(); ax.SetTitleOffset(0.8)
-  ax.SetTitle( titX );
+  ax.SetTitle( X[2] );
   ax.SetLabelSize(0.12)
   ax.SetTitleSize(0.14)
   ay=h2.GetYaxis(); 
@@ -101,18 +103,17 @@ def showme(data,theory,ratio,Xmin=0.01,Xmax=1000,Ymin=0.001,Ymax=5000,BMin=-1.99
   l1.SetTextSize(0.12);
   l1.SetNDC();
   l1.SetTextColor(1);
-  l1.DrawLatex(0.06,0.5,titR);
+  l1.DrawLatex(0.06,0.5,YB[2]);
 
   # draw line
-  x1=c1.XtoPad(Xmin)
-  x2=c1.XtoPad(Xmax)
+  x1=c1.XtoPad(X[0])
+  x2=c1.XtoPad(X[1])
   ar5=TLine(x1,0,x2,0);
   ar5.SetLineWidth(2)
   ar5.SetLineStyle(2)
   ar5.Draw("same")
 
-  print epsfig
-  ps1.Close()
+  c1.Print(figure);
 
   if (inp != "-b"):
    if (raw_input("Press any key to exit") != "-9999"):

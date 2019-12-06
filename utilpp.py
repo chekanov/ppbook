@@ -25,7 +25,7 @@ def showme(data,theory,ratio,Xmin=0.01,Xmax=1000,Ymin=0.001,Ymax=5000,BMin=-1.99
   print "Mode=",inp
 
   # prepare the canvas
-  epsfig=__file__.replace(".py",".eps")
+  epsfig="utilpp.eps"
 
   c1=TCanvas("cv","",600,500);
   ps1 = TPostScript( epsfig,113)
